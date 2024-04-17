@@ -1,9 +1,7 @@
 package com.foody.userservice.business;
 
 import com.foody.userservice.business.exceptions.UserNotFoundException;
-import com.foody.userservice.dto.CreateUserResponse;
-import com.foody.userservice.dto.UserRequest;
-import com.foody.userservice.dto.UserResponse;
+import com.foody.userservice.dto.*;
 import com.foody.userservice.persistence.UserRepository;
 import com.foody.userservice.persistence.entity.UserEntity;
 import com.foody.userservice.persistence.entity.UserRole;
@@ -56,16 +54,22 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-//    // Map UserEntity to UserResponse
-//    private UserResponse mapToUserResponse(UserEntity userEntity) {
-//        return new UserResponse(
-//                userEntity.getId(),
-//                userEntity.getFirstName(),
-//                userEntity.getLastName(),
-//                userEntity.getEmail(),
-//                userEntity.getBio(),
-//                userEntity.getProfilePicUrl(),
-//                userEntity.getRole().toString()
-//        );
-//    }
+    @Override
+    public void deleteUser(Long id) {
+        this.userRepository.deleteById(id);
+    }
+
+    @Override
+    public void updateUser(Long id, UpdateBasicUserRequest request) {
+
+        UserEntity existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException());
+
+        existingUser.setBio(request.getBio());
+        existingUser.setFirstName(request.getFirstName());
+        existingUser.setLastName(request.getLastName());
+        existingUser.setEmail(request.getEmail());
+
+        userRepository.save(existingUser);
+    }
 }
