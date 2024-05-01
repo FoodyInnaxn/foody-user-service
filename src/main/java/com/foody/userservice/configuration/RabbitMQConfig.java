@@ -10,23 +10,28 @@ import org.springframework.amqp.support.converter.MessageConverter;
 
 @Configuration
 public class RabbitMQConfig {
-    public static final String QUEUE = "savedRecipe_queue";
-    public static final String EXCHANGE = "savedRecipe_exchange";
-    public static final String ROUTING_KEY = "savedRecipe_routingKey";
+    public static final String AUTH_DELETE_QUEUE = "user_auth_delete_queue";
+    public static final String AUTH_QUEUE = "auth_queue";
+    public static final String FANOUT_EXCHANGE = "fanout_user_exchange";
 
     @Bean
-    public Queue queue() {
-        return new Queue(QUEUE);
+    public Queue auth_queue() {
+        return new Queue(AUTH_QUEUE);
+    }
+    @Bean
+    public Queue auth_delete_queue() {
+        return new Queue(AUTH_DELETE_QUEUE);
     }
 
     @Bean
-    public TopicExchange exchange() {
-        return new TopicExchange(EXCHANGE);
+    public FanoutExchange fanout_exchange() {
+        return new FanoutExchange(FANOUT_EXCHANGE);
     }
 
     @Bean
-    public Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
+    public Binding binding(Queue auth_delete_queue, FanoutExchange exchange) {
+        return BindingBuilder.bind(auth_delete_queue)
+                .to(exchange);
     }
 
     @Bean
