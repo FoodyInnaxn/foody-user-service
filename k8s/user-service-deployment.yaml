@@ -36,7 +36,7 @@ spec:
               value: admin
             - name: SPRING_RABBITMQ_HOST
               value: rabbitMQ
-          image: innaxn/foody-user-service:latest
+          image: innaxn/foody-user-service:testing-latest
           name: user-microservice
           ports:
             - containerPort: 8082
